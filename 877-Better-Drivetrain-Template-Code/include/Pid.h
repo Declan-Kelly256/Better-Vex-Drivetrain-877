@@ -19,8 +19,11 @@ class PID {
         double errLast; 
         double integral; 
 
+        double interval; 
+
     public: 
         PID(float p, float i, float d, double error);
+        PID(float p, float i, float d, double error, double loopInterval);
         // 
         PID(float p, float i, float d);
         // {
@@ -33,16 +36,18 @@ class PID {
         //     integral = 0;
         // }
 
-
+        
         double getPwr(double error);
+
+        double getError();
 
         void setKP(float p); 
         void setKI(float i);
         void setKD(float d); 
 
-        void setErorr(double err); // for foolProofing, integalReset is true by default 
-        void setErorr(double err, bool integralReset);
+        void refreshError(double error); 
 
+        void refreshError(double error , bool resetIntegral)
 
 
 
