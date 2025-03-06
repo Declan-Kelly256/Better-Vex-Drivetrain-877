@@ -21,15 +21,7 @@ class PID {
 
     public: 
         PID(float p, float i, float d, double error);
-        // {
-        //     kP = p;
-        //     kI = i;
-        //     kD = d;
-
-        //     err = error; 
-        //     errLast = err;
-        //     integral = 0; 
-        // }
+        // 
         PID(float p, float i, float d);
         // {
         //     kP = p;
