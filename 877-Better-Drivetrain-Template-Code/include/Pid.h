@@ -24,17 +24,8 @@ class PID {
     public: 
         PID(float p, float i, float d, double error);
         PID(float p, float i, float d, double error, double loopInterval);
-        // 
         PID(float p, float i, float d);
-        // {
-        //     kP = p;
-        //     kI = i;
-        //     kD = d;
-
-        //     err = 0; 
-        //     errLast = err;
-        //     integral = 0;
-        // }
+        
 
         
         double getPwr(double error);
