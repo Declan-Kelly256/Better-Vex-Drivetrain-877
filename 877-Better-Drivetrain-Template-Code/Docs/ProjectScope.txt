@@ -1,0 +1,32 @@
+Project Scope
+
+Plug & play for 2.5 setups 
+
+Barebones: 
+
+wheels, and an IMU
+
+inputs needed
+    components
+        motor objs , IMU obj 
+    Measurements 
+        WheelRadius, wheelWidth (horizontal distance from other wheel well)? 
+odom: 
+    Odom 1: 3 three tracking wheels and no IMU 
+        Components 
+            motors, and odom sensors 
+        Measurments 
+            all three odom sensor offsets from the tracking center 
+
+    Odom 2: 2 Tracking wheels and 1 IMU
+        Components 
+            motors, two odom wheels and IMU 
+        Measurements:
+            odom wheel offsets from tacking center 
+
+ideas:
+
+allow input of two IMU's to average data? 
+
+
+should be plug and play based off the the constructors used for the thingy
