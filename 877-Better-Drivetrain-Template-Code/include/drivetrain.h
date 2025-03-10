@@ -4,17 +4,12 @@
 #include <sstream>
 #include <vector>
 #include "odom.h"
-
 class customDrivetrain {
     private:
         //left
-        motor left1;
-        motor left2;
-        motor left3;
+        std::vector<vex::motor> leftWell; 
         //right
-        motor right1;
-        motor right2;
-        motor right3;
+        std::vector<vex::motor> rightWell; 
 
         //parallel odom 
 
