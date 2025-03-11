@@ -11,7 +11,7 @@ inputs needed
         motor objs , IMU obj 
     Measurements 
         WheelRadius, wheelWidth (horizontal distance from other wheel well)? 
-odom: 
+odom: differentiation between the two odom modes will be handled within the odom math class
     Odom 1: 3 three tracking wheels and no IMU 
         Components 
             motors, and odom sensors 

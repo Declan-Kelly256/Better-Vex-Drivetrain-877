@@ -3,7 +3,6 @@
 #include <string>
 #include <sstream>
 #include "Pid.h"
-#pragma once 
 using namespace vex;
 
 PID::PID(float p, float i, float d, double error){
@@ -55,12 +54,9 @@ double PID::getPwr(double error){
     return err * kP + integral * kI + dTerm * kD; 
 }
 
-void PID::setKP(float p)
-    kP = p;
-void PID::setKI(float i);
-    kI = i;
-void PID::setKD(float d); 
-    kD =  d; 
+void PID::setKP(float p) {kP = p;}
+void PID::setKI(float i) {kI = i;}
+void PID::setKD(float d) {kD = d;}
 
 void PID::refreshError(double error){
     integral = 0;

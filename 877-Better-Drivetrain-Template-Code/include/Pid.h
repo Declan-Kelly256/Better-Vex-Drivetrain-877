@@ -38,7 +38,7 @@ class PID {
 
         void refreshError(double error); 
 
-        void refreshError(double error , bool resetIntegral)
+        void refreshError(double error , bool resetIntegral);
 
 
 
