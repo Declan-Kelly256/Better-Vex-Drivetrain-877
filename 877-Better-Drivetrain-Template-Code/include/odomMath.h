@@ -29,8 +29,7 @@ class Odom : public Position { // oh yea inheritance baby
 
         double sensorLastIMU; 
 
-        double pi = 3.1459;
-
+        
         
         
     public: 
@@ -43,16 +42,18 @@ class Odom : public Position { // oh yea inheritance baby
 
         double calculateDeltaTheta(double deltaLeft, double deltaRight); // returns the angle of the arc of the movement in radians (for threeWheel) 
 
-        double calculateY(double deltaRight,double deltaTheta); // returns the forward arc Component of travel
+        double calculateY(double deltaRight,double deltaTheta); // returns the forward arc Component of travel 
+                                                                // IS Y AXIS ON LOCAL PLANE: MUST BE ROTATED BACK CW
         
         double calculateX(double deltaBack,double deltaTheta); // returns the perpendicular component of travel
+                                                               // IS X AXIS ON LOCAL PLANE: MUST BE ROTATED BACK CW
 
         Position updatePosition(); // returns the new Position of the robot
 
         Position updatePositionThreeWheel();// for three wheel mode
         Position updatePositionIMU(); // for IMU mode
 
-        Position coordinateRotator( Position p, double rotater)
+        Position coordinateRotator( Position& p, double radianRotater); // rotates a position back about the origin clockwise. 
 
 
 

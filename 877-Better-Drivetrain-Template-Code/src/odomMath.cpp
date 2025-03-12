@@ -40,6 +40,11 @@ wheelRadius(radiusWheel)
 }
 
 double Odom::calculateDeltaTheta(double deltaLeft, double deltaRight){
+    //exception -- prevents roundoff errors 
+    if( fabs(deltaLeft-deltaRight) < .0001 ){
+        return 0; 
+    }
+
     return (deltaLeft - deltaRight)/(leftOffset+rightOffset) ;
 }
 
@@ -53,12 +58,13 @@ double Odom::calculateX(double deltaBack,double deltaTheta){
     return 2*sin(deltaTheta/2) * ( (deltaBack / deltaTheta) + backOffset ); 
 }
 
-Position Odom::coordinateRotator( Position p, double rotater){
+Position Odom::coordinateRotator( Position& p, double radianRotater){
 
     //convert to polar 
     
     double radius = sqrt(p.getX()*p.getX()+ p.getY()+p.getY());
     double polarTheta;
+    // y axis exceptions for arctan domain 
     if( p.getX() == 0){
         if(p.getY() >= 0)
             polarTheta = pi/2;
@@ -67,18 +73,23 @@ Position Odom::coordinateRotator( Position p, double rotater){
     }else{
         polarTheta = atan( p.getY() / p.getX());
     }
+    // converts to quadrent II or III for angles in interval (pi/2 , 3pi/2)
     if (p.getX() < 0){
         radius *= -1;
     }
 
-    p.setX( radius*cos(polarTheta + rotater)) ; 
-    p.setY( radius*sin(polarTheta + rotater)) ;
-    
+    //rotate by the correct amount
 
+    p.setX( radius*cos(polarTheta + radianRotater)) ; 
+    p.setY( radius*sin(polarTheta + radianRotater)) ;
 
+    /*
+    please note that p.theta is not touched. for our purposes, the rotational offset of the local plane only 
+    affects x,y positon the arc angle measurement is an effective measurement of change in orientation without
+    processing. 
+    */
 
-
-
+    return p; // returns modified position 
 }
 
 Position Odom::updatePosition(){
@@ -91,4 +102,29 @@ Position Odom::updatePosition(){
 
 Position Odom::updatePositionThreeWheel(){
 
+    double sensChangeLeft = leftWheel.position(turns) * 2 * pi * wheelRadius  - sensorLastLeft;  
+    double sensChangeRight = rightWheel.position(turns) * 2 * pi * wheelRadius - sensorLastRight;
+    double sensChangeBack = backWheel.position(turns) * 2 * pi * wheelRadius -sensorLastBack;
+
+    //now done with last loop sensor Values , reset for next Loop 
+    sensorLastLeft = sensChangeLeft;
+    sensorLastRight = sensChangeRight;
+    sensorLastBack = sensChangeBack; 
+
+    Position localPlane = Position();
+    localPlane.setTheta(calculateDeltaTheta(sensChangeLeft , sensChangeLeft )); 
+    localPlane.setX( calculateX( sensChangeBack, localPlane.getTheta() ) ); 
+    localPlane.setY( calculateY( sensChangeRight , localPlane.getTheta() ) ); 
+
+    //made it pass by reference, so localPlane is properly rotated w/o more function calls
+    coordinateRotator(localPlane, -(localPlane.getTheta() * .5  + theta)); 
+
+    //we can now add this to the current position and it should be updated 
+
+    x += localPlane.getX(); 
+    y += localPlane.getY(); 
+    theta += localPlane.getTheta();
+
+    return  Position(x , y, theta); //small blunder, but i think i cant return the inherited object 
+    
 }
