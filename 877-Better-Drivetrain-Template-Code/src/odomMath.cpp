@@ -128,3 +128,17 @@ Position Odom::updatePositionThreeWheel(){
     return  Position(x , y, theta); //small blunder, but i think i cant return the inherited object 
     
 }
+
+Position Odom::updatePositionIMU(){
+    //
+    double sensChangeRight = rightWheel.position(turns) * 2 * pi * wheelRadius - sensorLastRight;
+    double sensChangeBack = backWheel.position(turns) * 2 * pi * wheelRadius -sensorLastBack;
+
+    sensorLastRight = sensChangeRight;
+    sensorLastBack = sensChangeBack; 
+
+    
+
+}
+
+
