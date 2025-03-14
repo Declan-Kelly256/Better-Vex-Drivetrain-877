@@ -107,9 +107,9 @@ Position Odom::updatePositionThreeWheel(){
     double sensChangeBack = backWheel.position(turns) * 2 * pi * wheelRadius -sensorLastBack;
 
     //now done with last loop sensor Values , reset for next Loop 
-    sensorLastLeft = sensChangeLeft;
-    sensorLastRight = sensChangeRight;
-    sensorLastBack = sensChangeBack; 
+    sensorLastLeft = leftWheel.position(turns) * 2 * pi * wheelRadius;
+    sensorLastRight = rightWheel.position(turns) * 2 * pi * wheelRadius;
+    sensorLastBack = backWheel.position(turns) * 2 * pi * wheelRadius; 
 
     Position localPlane = Position();
     localPlane.setTheta(calculateDeltaTheta(sensChangeLeft , sensChangeLeft )); 
@@ -129,15 +129,29 @@ Position Odom::updatePositionThreeWheel(){
     
 }
 
-Position Odom::updatePositionIMU(){
-    //
+Position Odom::updatePositionIMU(){ //literally the same thing but the IMU 
+                                    //replaces the 2nd wheel to find change in heading
+    //change in sensor values
     double sensChangeRight = rightWheel.position(turns) * 2 * pi * wheelRadius - sensorLastRight;
     double sensChangeBack = backWheel.position(turns) * 2 * pi * wheelRadius -sensorLastBack;
+    double sensChangeIMU = IMU.rotation(turns) * 2 * pi - sensorLastIMU;
+    //reset sensor values
+    sensorLastRight = rightWheel.position(turns) * 2 * pi * wheelRadius;
+    sensorLastBack = backWheel.position(turns) * 2 * pi * wheelRadius; 
+    sensorLastIMU = IMU.rotation(turns) * 2 * pi;  
+    //store local position data
+    Position localPlane = Position();
+    localPlane.setTheta(sensChangeIMU); 
+    localPlane.setX( calculateX( sensChangeBack, localPlane.getTheta() ) ); 
+    localPlane.setY( calculateY( sensChangeRight , localPlane.getTheta() ) ); 
+    //rotate to align with global/field plane 
+    coordinateRotator(localPlane, -(localPlane.getTheta() * .5  + theta) ); 
+    // change global position by local plane values
+    x += localPlane.getX(); 
+    y += localPlane.getY(); 
+    theta += localPlane.getTheta();
 
-    sensorLastRight = sensChangeRight;
-    sensorLastBack = sensChangeBack; 
-
-    
+    return  Position(x , y, theta); // return new position data in the
 
 }
 

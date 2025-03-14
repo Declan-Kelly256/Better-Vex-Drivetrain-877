@@ -4,7 +4,7 @@
 #include <sstream>
 #include "position.h"
 #pragma once
-using namespace vex;
+using namespace vex; 
 
 class Odom : public Position { // oh yea inheritance baby 
     private:
