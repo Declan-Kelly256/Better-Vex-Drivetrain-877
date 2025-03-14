@@ -49,7 +49,7 @@ class Odom : public Position { // oh yea inheritance baby
                                                                // IS X AXIS ON LOCAL PLANE: MUST BE ROTATED BACK CW
 
         Position updatePosition(); // returns the new Position of the robot
-
+    private:
         Position updatePositionThreeWheel();// for three wheel mode
         Position updatePositionIMU(); // for IMU mode
 
